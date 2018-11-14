@@ -80,7 +80,7 @@ class FarmService
         $this->setUp();
         $this->stateService->saveState($this->animals, $this->turns);
 
-        return 'New Game Created';
+        return '<div class="alert alert-info"><strong>New Game Created</strong></div>';
     }
 
     /**
@@ -114,14 +114,14 @@ class FarmService
         $gameState = $this->buildGameState();
 
         if ($this->gameHasTooFewAnimals($gameState)) {
-            return '<div class="alert alert-danger"><strong>You Lost this Game!! Try again!!</div>';
+            return '<div class="alert alert-danger"><strong>You Lost this Game!! Try again!!</strong></div>';
         }
 
         if (!$this->gameHasTooFewAnimals($gameState) && $this->turns >= $this->maxTurns) {
-            return '<div class="alert alert-success"><strong>Won!! Won!! Won!!</div>';
+            return '<div class="alert alert-success"><strong>Won!! Won!! Won!!</strong></div>';
         }
 
-        return '';
+        return '<div class="alert alert-warning"><strong>Feeding </strong></div>';
     }
 	
 	public function getLiveStatus(): string
