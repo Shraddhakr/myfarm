@@ -45,12 +45,13 @@ class StateService
      * @param $animals
      * @param $turns
      */
-    public function saveState($animals, $turns)
+    public function saveState($animals, $turns, $servedAnimal)
     {
         $state = (object)[
             'fromFile' => true,
             'animals'  => $animals,
             'turns'    => $turns,
+			'feedTo'   => $servedAnimal,
         ];
         file_put_contents(__DIR__.'/../../resources/state.json', json_encode($state));
     }

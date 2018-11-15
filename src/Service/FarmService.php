@@ -26,6 +26,8 @@ class FarmService
         'cow'    => 1,
         'bunny'  => 1,
     ];
+	
+	
 
     /**
      * @var array
@@ -78,9 +80,9 @@ class FarmService
     {
         $this->stateService->clearState();
         $this->setUp();
-        $this->stateService->saveState($this->animals, $this->turns);
+        $this->stateService->saveState($this->animals, $this->turns, '');
 
-        return '<div class="alert alert-info"><strong>New Game Created</strong></div>';
+        return 'newGame';
     }
 
     /**
@@ -102,26 +104,46 @@ class FarmService
             }
         }
         $this->turns++;
-        $this->stateService->saveState($this->animals, $this->turns);
+        $this->stateService->saveState($this->animals, $this->turns, $animal);
         return $this->getGameState();
     }
 
     /**
      * @return string
      */
+	 
+	public function CreateTurnTr($servedTo): string
+    {
+		$stateTr = '<tr>';
+
+        /**
+         * Process turn for each animal and remove dead animals
+         */
+        foreach ($servedTo as $key => $animal) {
+            $stateTr .= '<td>&#10004;Feed</td>';
+        }
+        $stateTr .= '</tr>';
+		
+        return $stateTr;
+    }
+
+    /**
+     * @return string
+     */
+	 
     protected function getGameState(): string
     {
         $gameState = $this->buildGameState();
 
         if ($this->gameHasTooFewAnimals($gameState)) {
-            return '<div class="alert alert-danger"><strong>You Lost this Game!! Try again!!</strong></div>';
+            return 'lost';
         }
 
         if (!$this->gameHasTooFewAnimals($gameState) && $this->turns >= $this->maxTurns) {
-            return '<div class="alert alert-success"><strong>Won!! Won!! Won!!</strong></div>';
+            return 'won';
         }
 
-        return '<div class="alert alert-warning"><strong>Feeding </strong></div>';
+        return 'feed';
     }
 	
 	public function getLiveStatus(): string
