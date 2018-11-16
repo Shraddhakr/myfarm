@@ -80,7 +80,7 @@ class FarmService
     {
         $this->stateService->clearState();
         $this->setUp();
-        $this->stateService->saveState($this->animals, $this->turns, '');
+        $this->stateService->saveState($this->animals, $this->turns, '', '');
 
         return 'newGame';
     }
@@ -95,18 +95,22 @@ class FarmService
 		$feedingTo = $animal->displayName;
         $getFed = $animal->feed();
 
+		$diedAnimal = array();
         /**
          * Process turn for each animal and remove dead animals
          */
         foreach ($this->animals as $key => $animal) {
             $animal->processTurn();
             if ($animal->hasStarvedToDeath()) {
+				$diedAnimal[] = $this->animals[$key]->displayName;
                 unset($this->animals[$key]);
             }
         }
 		
+		$diedAnimalStr = implode('|', $diedAnimal);
+		
         $this->turns++;
-        $this->stateService->saveState($this->animals, $this->turns, $feedingTo);
+        $this->stateService->saveState($this->animals, $this->turns, $feedingTo, $diedAnimalStr);
         return $this->getGameState();
     }
 

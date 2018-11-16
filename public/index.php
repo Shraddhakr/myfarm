@@ -47,7 +47,7 @@ foreach($animalArr as $entity){
 	}else if($entity['friendlyName'] == 'bunny'){
 		$bunnyTab .= '<p>'. $entity['displayName'] . '</p>';
 	}
-	$animalHeader .= '<th>'.$entity['displayName'].'</th>'; 
+	$animalHeader .= '<th class="'.$entity['displayName'].'Head">'.$entity['displayName'].'</th>'; 
 }
 
 ?>
@@ -59,16 +59,16 @@ foreach($animalArr as $entity){
 	<!-- game control-->
 	<div class="row game-control">
 		<div class="col-6">
-			<button type="button" class="btn btn-primary actionTab" name="newGame">START</button>
+			<button type="button" class="btn btn-primary actionTab w-25" name="newGame">START</button>
 			<button type="button" class="btn btn-primary ml-3 actionTab" name="feed" disabled>FEED</button>
 		</div>
 		<div class="col-6">
 			<span class="rounded-circle bg-info d-block float-right text-center" style="width:50px; height:50px;"><span class="align-middle h1 text-light font-weight-normal turns-played">0</span></span>
 		</div>	
 		<div class="col-12 mt-3 message-class">
-			<div class="alert alert-info d-none" data-action="newGame"><strong>New Game Created</strong></div>
-			<div class="alert alert-danger d-none" data-action="lost"><strong>You Lost this Game!! Try again!!</strong></div>
-			<div class="alert alert-success d-none" data-action="won"><strong>Won!! Won!! Won!!</strong></div>
+			<div class="alert alert-info d-none" data-action="newGame"><strong>New Game Created! Click on Feed to start feeding...</strong></div>
+			<div class="alert alert-danger d-none" data-action="lost"><strong>Alas! You Lost this Game! Try again!</strong></div>
+			<div class="alert alert-success d-none" data-action="won"><strong>Congratulations! You Won!!</strong></div>
 			<div class="alert alert-warning d-none" data-action="feed"><strong>Feeding </strong></div>
 		</div>
 	</div>
@@ -131,6 +131,9 @@ foreach($animalArr as $entity){
 			function successFunction(response){
 				var result = response.result;
 				
+				var diedAnimal = response.liveStatus.diedAnimal;
+				crossDiedAnimal(diedAnimal, result);
+				
 				$('.message-class .alert').addClass('d-none');
 
 				switch(result){
@@ -159,9 +162,19 @@ foreach($animalArr as $entity){
 			}
 			
 			function buildRow(liveStatus){
+				var diedAnimal = liveStatus.diedAnimal.split('|'); 
+				
+				
 				var newTr = '<tr><td class="bg-light">' + liveStatus.turns + '</td>';
 				for(var i = 0; i < animalList.length ; i++){
-					newTr += '<td>'+ (liveStatus.feedTo === animalList[i] ? "&#10004; Fed" : "") +'</td>';
+					var statusVal = '';
+					if(animalList[i] === liveStatus.feedTo){
+						statusVal = '&#10004; Fed';
+					}else if(diedAnimal.indexOf(animalList[i]) != '-1'){
+						statusVal = '&#10060 Died';
+					}
+				
+					newTr += '<td>'+ statusVal +'</td>';
 				}
 				newTr += '</tr>';
 				
@@ -172,14 +185,28 @@ foreach($animalArr as $entity){
 				$('.animals').empty()
 				
 				$.each(animals, function(index, animal) {
-					var animalP = '<p>' + animal.displayName + '</p>'
-					
+					var animalP = '<p>' + animal.displayName + '</p>';
 					$('.animals.'+animal.friendlyName+'Tab').append(animalP)
 				})
 			}
 			
 			function updateCount(turn) {
 				$('.turns-played').text(turn)
+			}
+			
+			function crossDiedAnimal(diedAnimal, result) {
+				switch(result){
+					case 'newGame':
+						$('.game-summary th').removeClass('bg-danger');
+					break;
+					default:
+					var diedAnimalArr = diedAnimal.split('|');
+					$.each(diedAnimalArr, function(index, animal) {
+						$('.game-summary .'+animal+'Head').addClass('bg-danger');
+					})
+				}
+				
+				
 			}
 		})		
 	</script
