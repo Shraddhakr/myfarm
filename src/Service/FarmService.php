@@ -91,8 +91,9 @@ class FarmService
     public function processTurn(): string
     {
 	    $this->setUp();
-        $animalRandom = $this->getRandomAnimal();
-        $animalRandom->feed();
+        $animal = $this->getRandomAnimal();
+		$feedingTo = $animal->displayName;
+        $getFed = $animal->feed();
 
         /**
          * Process turn for each animal and remove dead animals
@@ -103,8 +104,9 @@ class FarmService
                 unset($this->animals[$key]);
             }
         }
+		
         $this->turns++;
-        $this->stateService->saveState($this->animals, $this->turns, $animalRandom);
+        $this->stateService->saveState($this->animals, $this->turns, $feedingTo);
         return $this->getGameState();
     }
 

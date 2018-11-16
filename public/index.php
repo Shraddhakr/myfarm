@@ -136,7 +136,9 @@ foreach($animalArr as $entity){
 				switch(result){
 					case 'newGame':
 						$('[name=feed]').prop('disabled', false);
-						$('.game-summary').removeClass('d-none').find('.summary-tr').empt;
+						$('.game-summary').removeClass('d-none').find('.summary-tr').empty();
+						buildLiveAnimals(response.liveStatus.animals);
+						updateCount(response.liveStatus.turns);
 					break;
 					case 'lost': 
 					case 'won': 
@@ -159,7 +161,7 @@ foreach($animalArr as $entity){
 			function buildRow(liveStatus){
 				var newTr = '<tr><td class="bg-light">' + liveStatus.turns + '</td>';
 				for(var i = 0; i < animalList.length ; i++){
-					newTr += '<td>'+ (liveStatus.feedTo.displayName === animalList[i] ? "&#10004; Fed" : "") +'</td>';
+					newTr += '<td>'+ (liveStatus.feedTo === animalList[i] ? "&#10004; Fed" : "") +'</td>';
 				}
 				newTr += '</tr>';
 				

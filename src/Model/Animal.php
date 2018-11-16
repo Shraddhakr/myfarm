@@ -33,7 +33,7 @@ abstract class Animal
      */
     public function feed()
 	{
-        $this->appetite = $this->feedingInterval;
+        $this->appetite = $this->feedingInterval + 1;
 	}
 
     /**
