@@ -50,7 +50,7 @@ final class StateServiceTest extends TestCase
         if (file_exists($this->file)) {
             unlink($this->file);
         }
-        $this->stateService->saveState([new \FarmGame\Model\Bunny()], 1);
+        $this->stateService->saveState([new \FarmGame\Model\Bunny()], 1, '', '');
         $this->assertTrue(file_exists($this->file));
     }
 }
